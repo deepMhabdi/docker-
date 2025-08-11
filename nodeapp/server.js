@@ -41,21 +41,25 @@ app.get("/getUsers", async (req, res) => {
 // Post new user
 app.post("/addUser", async (req, res) => {
     try {
+        console.log("Incoming user data:", req.body); // Log form data
+
         await client.connect();
         console.log("Connected to MongoDB");
 
         const db = client.db("my-sample-db");
         const result = await db.collection("users").insertOne(req.body);
 
-        console.log("Data inserted:", result);
+        console.log("Data inserted into MongoDB:", result);
         res.send("User added successfully");
     } catch (err) {
-        console.error(err);
+        console.error("Error while adding user:", err);
         res.status(500).send("Error adding user");
     } finally {
         await client.close();
     }
 });
+
+
 
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
